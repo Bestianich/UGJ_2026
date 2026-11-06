@@ -5,14 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class DraggableEntity : MonoBehaviour
 {
-    [SerializeField] private float _dragPrecision = 0.1f;
     [SerializeField] private float _launchForce = 5f;
+    [SerializeField] private float _offsetZ = 5f; //The distance from the camera
     
     private Rigidbody _rb;
     private bool _isGettingDragged = false;
-
-    private Vector3 _offset;
-    private float _offsetZ = 1f;
+    
 
     private Camera _camera;
     private void Start()
@@ -52,18 +50,10 @@ public class DraggableEntity : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit) && hit.transform == transform)
         {
             _isGettingDragged = true;
-            Vector2 mousePos = MouseController.Instance.GetMousePosition();
-            
-            _offsetZ = hit.distance;
-
-            Vector3 mouseWorld = _camera.ScreenToWorldPoint(
-                new Vector3(mousePos.x, mousePos.y, _offsetZ));
-            
-            _offset = transform.position - mouseWorld;
             
             _rb.freezeRotation = true;
             _rb.isKinematic = false;
-
+            _rb.useGravity = false;
         }
         
     }
@@ -74,9 +64,8 @@ public class DraggableEntity : MonoBehaviour
       
         Vector3 mouseWorldPos = _camera.ScreenToWorldPoint(
             new Vector3(mousePos.x, mousePos.y, _offsetZ));
+        _rb.MovePosition(mouseWorldPos);
         
-        Vector3 snappedPosition = SnapToMouse(mouseWorldPos + _offset);
-        _rb.MovePosition(snappedPosition);
     }
     
 
@@ -85,20 +74,21 @@ public class DraggableEntity : MonoBehaviour
     {
         _isGettingDragged = false;
         _rb.freezeRotation = false;
-        
+        _rb.useGravity = true;
         Vector3 mouseDelta = MouseController.Instance.GetMouseDelta();
         Vector3 launchVelocity = new Vector3(mouseDelta.x, mouseDelta.y, 0) * _launchForce;
-        
+
+        _rb.AddForce(Vector3.forward * _launchForce, ForceMode.Impulse);
         _rb.linearVelocity = launchVelocity;
     }
 
+    
 
-    private Vector3 SnapToMouse(Vector3 position)
+    
+    private void OnDrawGizmos()
     {
-        return new Vector3(
-                Mathf.Round(position.x / _dragPrecision) * _dragPrecision,
-                Mathf.Round(position.y / _dragPrecision) * _dragPrecision,
-                position.z
-            );
+        
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * _offsetZ);
     }
 }
