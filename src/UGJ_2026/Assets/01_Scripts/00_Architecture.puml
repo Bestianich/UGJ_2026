@@ -1,0 +1,50 @@
+﻿@startuml 
+
+class PlaneConsole <<(M , lightblue)>>
+{
+
+    -int: _maxAltitude
+    -int: _goalAltitude
+    -int: _currentAltitude
+    -int: _secondOperator
+    -ButtonOperation: _selectedOperation
+    
+    +void: RegisterNewOperation(ButtonOperation)
+    +void: ExecuteOperation()
+        
+} 
+
+class PlaneConsoleUIHandler <<(M , lightblue)>>
+{
+    -TextMeshPro: _goalAltitudeText
+    -TextMeshPro: _currentAltitudeText
+    -TextMeshPro: _secondOperatorText
+    -GameObject: _currentOperationObj
+    
+    +void: UpdateUI()
+     
+}
+
+enum ButtonOperation
+{
+    +SUM
+    +SUBSTRACT
+    +MULTIPLY
+    +DIVISION
+    +RANDOM
+    +SHUFFLE
+    +REMOVESX
+    +REMOVEDX
+}
+
+class Button <<(M , lightblue)>>
+{
+    -ButtonOperation: _buttonOperation
+    +void: OnClick()
+}
+
+PlaneConsole -* ButtonOperation
+PlaneConsoleUIHandler -> PlaneConsole
+PlaneConsole <--  Button
+Button -* ButtonOperation
+@enduml
