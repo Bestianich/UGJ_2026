@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 
 
-public class Button : MonoBehaviour
+public class Button : MonoBehaviour , IInteractable
 {
     [SerializeField] private ButtonOperation _buttonOperation;
 
@@ -13,4 +13,15 @@ public class Button : MonoBehaviour
     {
         OnClickEvent?.Invoke(_buttonOperation);
     }
+
+    public ButtonOperation GetButtonOperation()
+    {
+        return _buttonOperation;
+    }
+
+    public void Interact()
+    {
+        OnClick();
+    }
+    
 }

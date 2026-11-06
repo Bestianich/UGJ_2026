@@ -1,4 +1,6 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class PlaneConsoleUIHandler : MonoBehaviour
@@ -9,8 +11,9 @@ public class PlaneConsoleUIHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _currentAltitudeText;
     [SerializeField] private TextMeshProUGUI _secondOperatorText;
     [SerializeField] private ButtonOperation _selectedOperation;
-
-
+    [SerializeField] private Transform _selectedOperationSpawnPoint;
+    private GameObject _spawnedOperation;
+    
     private void OnEnable()
     {
         _planeConsole.OnRegisterNewOperation += UpdateSelectedOperation;
@@ -23,11 +26,14 @@ public class PlaneConsoleUIHandler : MonoBehaviour
         _planeConsole.OnExecuteButtonOperation -= UpdateUI;
     }
 
-
-
+    
     private void UpdateSelectedOperation(ButtonOperation buttonOperation)
     {
+        Destroy(_spawnedOperation);
         _selectedOperation = buttonOperation;
+        _spawnedOperation = Instantiate(_selectedOperation.OperationVFX , _selectedOperationSpawnPoint);
+        _spawnedOperation.transform.position = _selectedOperationSpawnPoint.position;
+        
     }
 
 
