@@ -72,6 +72,9 @@ public class DraggableEntity : MonoBehaviour
 
     private void EndDrag()
     {
+        
+        if(!_isGettingDragged)
+            return;
         _isGettingDragged = false;
         _rb.freezeRotation = false;
         _rb.useGravity = true;
