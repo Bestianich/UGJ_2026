@@ -54,7 +54,6 @@ public class PlaneConsole : MonoBehaviour
                 Divide();
                 break;
             case Operation.RANDOM:
-                Randomize();
                 break;
             case Operation.SWAP:
                 Swap();
@@ -72,7 +71,7 @@ public class PlaneConsole : MonoBehaviour
                 Debug.LogError($"{_selectedOperation.Operation} is not a valid operation");
                 break;
         }
-        
+        Randomize();
         OnExecuteButtonOperation?.Invoke(_goalAltitude , _currentAltitude, _secondOperator);
     }
     
