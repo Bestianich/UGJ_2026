@@ -22,7 +22,7 @@ public class PlaneConsole : MonoBehaviour
         _goalAltitude = Random.Range(0, _maxAltitude);
         _currentAltitude = Random.Range(0, _maxAltitude);
         _secondOperator = Random.Range(0, _maxAltitude);
-        OnExecuteButtonOperation?.Invoke(_secondOperator, _goalAltitude, _currentAltitude);
+        OnExecuteButtonOperation?.Invoke(_goalAltitude, _currentAltitude, _secondOperator);
     }
 
 
@@ -72,6 +72,7 @@ public class PlaneConsole : MonoBehaviour
                 Debug.LogError($"{_selectedOperation.Operation} is not a valid operation");
                 break;
         }
+        
         OnExecuteButtonOperation?.Invoke(_goalAltitude , _currentAltitude, _secondOperator);
     }
     
