@@ -2,6 +2,8 @@
 
 class PlaneConsole <<(M , lightblue)>>
 {
+    +Action<ButtonOperation>: OnRegisterNewOperation
+    +Action<int, int, int>: OnExecuteOperation
 
     -int: _maxAltitude
     -int: _goalAltitude
@@ -12,26 +14,45 @@ class PlaneConsole <<(M , lightblue)>>
     +void: RegisterNewOperation(ButtonOperation)
     +void: ExecuteOperation()
         
+    -void: Sum()
+    -void: Substract()
+    -void: Multiply()
+    -void: Divide()
+    -void: Random()
+    -void: Swap()
+    -void: Shuffle()
+    -void: RemoveSX()
+    -void: RemoveDX()
+    
 } 
 
 class PlaneConsoleUIHandler <<(M , lightblue)>>
 {
+    -PlaneConsole: _planeConsole
     -TextMeshPro: _goalAltitudeText
     -TextMeshPro: _currentAltitudeText
     -TextMeshPro: _secondOperatorText
-    -GameObject: _currentOperationObj
+    -ButtonOperation: _selectedOperation
     
-    +void: UpdateUI()
+    +void: UpdateSelectedOperation(ButtonOperation)
+    +void: UpdateUI(int , int , int)
      
 }
 
-enum ButtonOperation
+class ButtonOperation
+{
+    +Operation: Operation
+    +GameObject: OperationVFX
+}
+
+enum Operation
 {
     +SUM
     +SUBSTRACT
     +MULTIPLY
     +DIVISION
     +RANDOM
+    +SWAP
     +SHUFFLE
     +REMOVESX
     +REMOVEDX
@@ -39,12 +60,14 @@ enum ButtonOperation
 
 class Button <<(M , lightblue)>>
 {
+    +UnityEvent<ButtonOperation>: OnClickEvent
     -ButtonOperation: _buttonOperation
     +void: OnClick()
 }
 
 PlaneConsole -* ButtonOperation
-PlaneConsoleUIHandler -> PlaneConsole
+PlaneConsoleUIHandler -* PlaneConsole
 PlaneConsole <--  Button
 Button -* ButtonOperation
+ButtonOperation -* Operation
 @enduml
